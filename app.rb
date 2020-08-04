@@ -4,9 +4,14 @@ require 'sinatra/reloader' #gem install sinatra-reloader
 require 'pony'
 require 'sqlite3'
 
+
+def get_db
+  return SQLite3::Database.new "barbershop.db"
+end
+
 configure do
-  @db = SQLite3::Database.new "barbershop.db"
-  @db.execute 'CREATE TABLE IF NOT EXISTS
+  db = get_db
+  db.execute 'CREATE TABLE IF NOT EXISTS
    "Users" 
    (
       "id" INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -74,11 +79,20 @@ post '/visit_form' do
     end
   end
 
+  if @error != ""
+    erb :visit_form
+  end  
+  
   f = File.open "./public/users.txt", "a"
   f.write "Master: #{@master}, User: #{@clientname}, Phone: #{@userphone}, Time: #{@userdate}, Color: #{@color}\n" 
   f.close
 
-  erb :visit_form
+  db = get_db
+  db.execute "insert into Users (username, phone, datestamp, master, color)
+   values (?, ?, ?, ?, ?)", [@clientname, @userphone, @userdate, @master, @color]
+
+  return erb "oki doki"
+
 end  
 
 post '/contacts' do
@@ -139,3 +153,4 @@ end
 get '/secure/place' do
   erb 'This is a secret place that only <%=session[:identity]%> has access to!'
 end
+
