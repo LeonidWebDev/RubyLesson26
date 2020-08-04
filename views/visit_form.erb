@@ -4,9 +4,9 @@
 <form action="/visit_form" method="POST">
   <label for="masterSelect1">Выберите мастера</label>
   <select class="form-control mybg" name="master" id="masterSelect1">
-    <option>1. Whalter White</option>
-    <option class="jessi">2. Jessi Pinkman</option>
-    <option>3. Gus Fring</option>
+    <option <%= @master == "Whalter White" ? "selected" : "" %>>Whalter White</option>
+    <option <%= @master == "Jessi Pinkman" ? "selected" : "" %>>Jessi Pinkman</option>
+    <option <%= @master == "Gus Fring" ? "selected" : "" %>>Gus Fring</option>
   </select>
   <div class="form-group">
     <label for="exampleInputEmail1">Ваше имя</label>

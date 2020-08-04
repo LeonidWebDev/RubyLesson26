@@ -2,6 +2,21 @@ require 'rubygems'
 require 'sinatra'
 require 'sinatra/reloader' #gem install sinatra-reloader
 require 'pony'
+require 'sqlite3'
+
+configure do
+  @db = SQLite3::Database.new "barbershop.db"
+  @db.execute 'CREATE TABLE IF NOT EXISTS
+   "Users" 
+   (
+      "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+      "username" TEXT,
+      "phone" TEXT,
+      "datestamp" TEXT,
+      "master" TEXT,
+      "color" TEXT
+    )'
+end
 
 configure do
   enable :sessions
