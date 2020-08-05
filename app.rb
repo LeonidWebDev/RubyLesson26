@@ -9,7 +9,23 @@ def get_db
   return SQLite3::Database.new "barbershop.db"
 end
 
+def set_masters 
+  @barbers.each do |brb|
+    db = SQLite3::Database.new "barbershop.db"
+    db.execute 'insert into Barbers (master)
+    values (?)', brb
+  end  
+end
+
+def is_set_masters?
+  db = SQLite3::Database.new "barbershop.db"
+  db.execute 'select master from Barbers where id = 1' do |row|
+    return row[0].to_s
+  end
+end
+
 configure do
+  @barbers = ["Whalter White", "Jessi Pinkman", "Gus Fring"]
   db = get_db
   db.execute 'CREATE TABLE IF NOT EXISTS
    "Users" 
@@ -21,6 +37,19 @@ configure do
       "master" TEXT,
       "color" TEXT
     )'
+  db.execute 'CREATE TABLE IF NOT EXISTS
+  "Barbers" 
+  (
+      "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+      "master" TEXT
+    )'
+
+  if  is_set_masters? == @barbers[0]
+    
+  else
+    set_masters
+  end
+
 end
 
 configure do
@@ -59,6 +88,25 @@ end
 
 get '/contacts' do
   erb :contacts
+end
+
+# row  is array here(in Database)
+def readDB
+  @clientData = ""
+  db = SQLite3::Database.new "barbershop.db"
+  db.results_as_hash = true
+  db.execute 'select * from Users order by id desc' do |row| 
+    print row['username']
+    print "\t-\t"
+    puts row['datestamp']
+    puts "-----------------"
+    @clientData = @clientData.to_s + row.to_s
+  end
+  return @clientData
+end
+
+get '/showusers' do
+  erb :showusers
 end
 
 post '/visit_form' do
@@ -153,4 +201,6 @@ end
 get '/secure/place' do
   erb 'This is a secret place that only <%=session[:identity]%> has access to!'
 end
+
+
 

@@ -4,7 +4,7 @@
 <form action="/visit_form" method="POST">
   <label for="masterSelect1">Выберите мастера</label>
   <select class="form-control mybg" name="master" id="masterSelect1">
-    <option <%= @master == "Whalter White" ? "selected" : "" %>>Whalter White</option>
+    <option <%= @master == "Whalter White" ? "selected" : "" %>><%= is_set_masters? %></option>
     <option <%= @master == "Jessi Pinkman" ? "selected" : "" %>>Jessi Pinkman</option>
     <option <%= @master == "Gus Fring" ? "selected" : "" %>>Gus Fring</option>
   </select>
@@ -21,6 +21,11 @@
   <div class="form-group">
     <label for="exampleInputDate">Когда Вас ждать</label>
     <input type="text" class="form-control" name="userdate" id="exampleInputDate" placeholder="Введите время..." value="<%=@userdate%>" aria-describedby="dateHelp">
+    <small id="emailHelp" class="form-text text-muted">Здесь Вы можете обозначить удобное время.</small>
+  </div>
+  <div class="form-group">
+    <label for="datetimepicker">пикер</label>
+    <input id="datetimepicker" type="text" class="form-control" name="userdate" placeholder="Введите время..." value="" aria-describedby="dateHelp">
     <small id="emailHelp" class="form-text text-muted">Здесь Вы можете обозначить удобное время.</small>
   </div>
   <div class="form-group">
@@ -46,13 +51,14 @@
 </form>
 
 <script type="text/javascript">
+  
 
-  $(".mybg").css("background-color", "blue")
-  $(".mybg").css("color", "white")
-  $(".jessi").css("background-color", "pink")
+
+  
   console.log("hello from visit page")
 
   $('select[name="colorpicker"]').simplecolorpicker(); 
+  $('#datetimepicker').datetimepicker();
 
   
 
